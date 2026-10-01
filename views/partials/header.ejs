@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <title><%= title %> | Бытовой Эксперт</title>
+  <link rel="stylesheet" href="/bootstrap/css/bootstrap.min.css">
+</head>
+<body>
+
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+  <div class="container">
+
+    <a class="navbar-brand d-flex align-items-center" href="/">
+      <img src="/img/logo.png" alt="logo" width="90" height="90" class="me-2 rounded bg-white">
+      <span>Бытовой Эксперт</span>
+    </a>
+
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navMenu">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navMenu">
+      <!-- Ссылки на страницы -->
+      <ul class="navbar-nav me-auto">
+        <li class="nav-item"><a class="nav-link" href="/">Главная</a></li>
+        <li class="nav-item"><a class="nav-link" href="/catalog">Каталог</a></li>
+        <li class="nav-item"><a class="nav-link" href="/contacts">Контакты</a></li>
+      </ul>
+
+      <!-- Кнопки авторизации и регистрации -->
+      <div class="d-flex gap-2">
+        <a href="/login" class="btn btn-outline-light btn-sm">Авторизация</a>
+        <a href="/register" class="btn btn-primary btn-sm">Регистрация</a>
+      </div>
+    </div>
+
+  </div>
+</nav>
+
+<main class="container my-4">
