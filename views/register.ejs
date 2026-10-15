@@ -1,58 +1,101 @@
 <%- include('partials/header') %>
 
-<h1>Регистрация</h1>
+<div class="row justify-content-center">
+  <div class="col-md-6">
+    <h1 class="text-center">Регистрация</h1>
 
-<form method="POST" action="/register" class="mt-3" style="max-width:500px">
+    <form method="POST" action="/register" class="mt-3" id="regForm">
 
-  <div class="mb-3">
-    <label>Имя *</label>
-    <input name="name" value="<%= old.name || '' %>" class="form-control">
-    <% if (errors.name) { %><div class="text-danger"><%= errors.name %></div><% } %>
+      <div class="mb-3">
+        <label>Имя *</label>
+        <input name="name" value="<%= old.name || '' %>" class="form-control"
+               required pattern="[А-Яа-яЁё\s-]+"
+               title="Только кириллица, пробел и тире">
+        <% if (errors.name) { %>
+          <div class="text-danger"><%= errors.name %></div>
+        <% } %>
+      </div>
+
+      <div class="mb-3">
+        <label>Фамилия *</label>
+        <input name="surname" value="<%= old.surname || '' %>" class="form-control"
+               required pattern="[А-Яа-яЁё\s-]+"
+               title="Только кириллица, пробел и тире">
+        <% if (errors.surname) { %>
+          <div class="text-danger"><%= errors.surname %></div>
+        <% } %>
+      </div>
+
+      <div class="mb-3">
+        <label>Отчество</label>
+        <input name="patronymic" value="<%= old.patronymic || '' %>" class="form-control"
+               pattern="[А-Яа-яЁё\s-]+"
+               title="Только кириллица, пробел и тире">
+        <% if (errors.patronymic) { %>
+          <div class="text-danger"><%= errors.patronymic %></div>
+        <% } %>
+      </div>
+
+      <div class="mb-3">
+        <label>Логин *</label>
+        <input name="login" value="<%= old.login || '' %>" class="form-control"
+               required pattern="[A-Za-z0-9-]+"
+               title="Только латиница, цифры и тире">
+        <% if (errors.login) { %>
+          <div class="text-danger"><%= errors.login %></div>
+        <% } %>
+      </div>
+
+      <div class="mb-3">
+        <label>Email *</label>
+        <input type="email" name="email" value="<%= old.email || '' %>" class="form-control"
+               required>
+        <% if (errors.email) { %>
+          <div class="text-danger"><%= errors.email %></div>
+        <% } %>
+      </div>
+
+      <div class="mb-3">
+        <label>Пароль *</label>
+        <input type="password" name="password" class="form-control"
+               required minlength="6"
+               title="Минимум 6 символов">
+        <% if (errors.password) { %>
+          <div class="text-danger"><%= errors.password %></div>
+        <% } %>
+      </div>
+
+      <div class="mb-3">
+        <label>Повтор пароля *</label>
+        <input type="password" name="password_repeat" class="form-control"
+               required minlength="6">
+        <% if (errors.password_repeat) { %>
+          <div class="text-danger"><%= errors.password_repeat %></div>
+        <% } %>
+      </div>
+
+      <div class="mb-3 form-check">
+        <input type="checkbox" name="rules" class="form-check-input" id="rules" required>
+        <label class="form-check-label" for="rules">Согласен с правилами *</label>
+        <% if (errors.rules) { %>
+          <div class="text-danger"><%= errors.rules %></div>
+        <% } %>
+      </div>
+
+      <button class="btn btn-primary w-100">Зарегистрироваться</button>
+    </form>
   </div>
+</div>
 
-  <div class="mb-3">
-    <label>Фамилия *</label>
-    <input name="surname" value="<%= old.surname || '' %>" class="form-control">
-    <% if (errors.surname) { %><div class="text-danger"><%= errors.surname %></div><% } %>
-  </div>
-
-  <div class="mb-3">
-    <label>Отчество</label>
-    <input name="patronymic" value="<%= old.patronymic || '' %>" class="form-control">
-    <% if (errors.patronymic) { %><div class="text-danger"><%= errors.patronymic %></div><% } %>
-  </div>
-
-  <div class="mb-3">
-    <label>Логин *</label>
-    <input name="login" value="<%= old.login || '' %>" class="form-control">
-    <% if (errors.login) { %><div class="text-danger"><%= errors.login %></div><% } %>
-  </div>
-
-  <div class="mb-3">
-    <label>Email *</label>
-    <input name="email" value="<%= old.email || '' %>" class="form-control">
-    <% if (errors.email) { %><div class="text-danger"><%= errors.email %></div><% } %>
-  </div>
-
-  <div class="mb-3">
-    <label>Пароль *</label>
-    <input type="password" name="password" class="form-control">
-    <% if (errors.password) { %><div class="text-danger"><%= errors.password %></div><% } %>
-  </div>
-
-  <div class="mb-3">
-    <label>Повтор пароля *</label>
-    <input type="password" name="password_repeat" class="form-control">
-    <% if (errors.password_repeat) { %><div class="text-danger"><%= errors.password_repeat %></div><% } %>
-  </div>
-
-  <div class="mb-3 form-check">
-    <input type="checkbox" name="rules" class="form-check-input" id="rules">
-    <label class="form-check-label" for="rules">Согласен с правилами *</label>
-    <% if (errors.rules) { %><div class="text-danger"><%= errors.rules %></div><% } %>
-  </div>
-
-  <button class="btn btn-primary">Зарегистрироваться</button>
-</form>
+<script>
+document.getElementById('regForm').addEventListener('submit', function (e) {
+  const p1 = document.querySelector('[name=password]').value;
+  const p2 = document.querySelector('[name=password_repeat]').value;
+  if (p1 !== p2) {
+    e.preventDefault();
+    alert('Пароли не совпадают');
+  }
+});
+</script>
 
 <%- include('partials/footer') %>
