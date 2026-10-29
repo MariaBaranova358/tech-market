@@ -36,9 +36,48 @@ app.get('/', (req, res) => {
 });
 
 // Каталог — берём товары из БД
+// Каталог — сортировка, фильтр по категории
 app.get('/catalog', async (req, res) => {
-  const result = await pool.query('SELECT * FROM products WHERE stock > 0 ORDER BY created_at DESC');
-  res.render('catalog', { title: 'Каталог', products: result.rows });
+  const { sort = 'new', category = '' } = req.query;
+
+  let orderBy = 'p.created_at DESC';           // по новизне (по умолчанию)
+  if (sort === 'year')  orderBy = 'p.year DESC';
+  if (sort === 'name')  orderBy = 'p.name ASC';
+  if (sort === 'price') orderBy = 'p.price ASC';
+
+  let sql = `
+    SELECT p.*, c.name AS category_name
+    FROM products p
+    LEFT JOIN categories c ON c.id = p.category_id
+    WHERE p.stock > 0
+  `;
+  const params = [];
+
+  if (category) {
+    sql += ' AND p.category_id = $1';
+    params.push(category);
+  }
+
+  sql += ' ORDER BY ' + orderBy;
+
+  const products = await pool.query(sql, params);
+  const categories = await pool.query('SELECT * FROM categories ORDER BY id');
+
+  res.render('catalog', {
+    title: 'Каталог',
+    products: products.rows,
+    categories: categories.rows,
+    sort,
+    category,
+  });
+});
+
+// Страница товара
+app.get('/product/:id', async (req, res) => {
+  const r = await pool.query('SELECT * FROM products WHERE id = $1 AND stock > 0', [req.params.id]);
+  if (!r.rows.length) return res.redirect('/catalog');
+
+  res.render('product', { title: r.rows[0].name, product: r.rows[0] });
 });
 
 // Контакты

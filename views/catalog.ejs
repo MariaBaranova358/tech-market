@@ -1,15 +1,53 @@
 <%- include('partials/header') %>
-<h1>Каталог</h1>
-<div class="row">
+
+<h1 class="mb-4">Каталог</h1>
+
+<form method="GET" action="/catalog" class="row g-2 mb-4">
+
+  <div class="col-md-4">
+    <label class="form-label">Сортировка</label>
+    <select name="sort" class="form-select" onchange="this.form.submit()">
+      <option value="new"   <%= sort === 'new'   ? 'selected' : '' %>>По новизне</option>
+      <option value="year"  <%= sort === 'year'  ? 'selected' : '' %>>По году</option>
+      <option value="name"  <%= sort === 'name'  ? 'selected' : '' %>>По названию</option>
+      <option value="price" <%= sort === 'price' ? 'selected' : '' %>>По цене</option>
+    </select>
+  </div>
+
+  <div class="col-md-4">
+    <label class="form-label">Категория</label>
+    <select name="category" class="form-select" onchange="this.form.submit()">
+      <option value="">Все категории</option>
+      <% categories.forEach(c => { %>
+        <option value="<%= c.id %>" <%= category == c.id ? 'selected' : '' %>>
+          <%= c.name %>
+        </option>
+      <% }) %>
+    </select>
+  </div>
+
+</form>
+
+<div class="row g-4">
+  <% if (products.length === 0) { %>
+    <p>Товаров не найдено.</p>
+  <% } %>
+
   <% products.forEach(p => { %>
-    <div class="col-md-4 mb-3">
-      <div class="card">
-        <div class="card-body">
-          <h5><%= p.name %></h5>
-          <p><%= p.price %> ₽</p>
+    <div class="col-md-4">
+      <a href="/product/<%= p.id %>" class="text-decoration-none text-dark">
+        <div class="card h-100">
+          <img src="/img/products/<%= p.image || 'no-image.jpg' %>"
+               class="card-img-top" style="height:200px; object-fit:contain; padding:10px;"
+               alt="<%= p.name %>">
+          <div class="card-body">
+            <h5 class="card-title"><%= p.name %></h5>
+            <p class="fw-bold mb-0"><%= Number(p.price).toLocaleString('ru-RU') %> ₽</p>
+          </div>
         </div>
-      </div>
+      </a>
     </div>
   <% }) %>
 </div>
+
 <%- include('partials/footer') %>
