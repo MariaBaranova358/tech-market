@@ -74,10 +74,19 @@ app.get('/catalog', async (req, res) => {
 
 // Страница товара
 app.get('/product/:id', async (req, res) => {
-  const r = await pool.query('SELECT * FROM products WHERE id = $1 AND stock > 0', [req.params.id]);
-  if (!r.rows.length) return res.redirect('/catalog');
+  const r = await pool.query(
+    'SELECT * FROM products WHERE id = $1 AND stock > 0',
+    [req.params.id]
+  );
 
-  res.render('product', { title: r.rows[0].name, product: r.rows[0] });
+  if (!r.rows.length) {
+    return res.redirect('/catalog'); // товара нет или нет в наличии
+  }
+
+  res.render('product', {
+    title: r.rows[0].name,
+    product: r.rows[0],
+  });
 });
 
 // Контакты
